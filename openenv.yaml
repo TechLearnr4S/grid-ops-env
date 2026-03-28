@@ -1,0 +1,95 @@
+name: grid-ops-env
+version: "1.0.0"
+description: "Power Grid Emergency Operations Center — AI agent manages electricity supply, handles faults, prevents blackouts"
+author: "grid-ops-env contributors"
+tags:
+  - openenv
+  - grid
+  - energy
+  - operations
+  - real-world
+
+tasks:
+  - id: task_easy
+    name: "Peak Demand Dispatch"
+    difficulty: easy
+    max_steps: 6
+    description: >
+      It is 18:00 — peak evening demand.
+      Supply is 300 MW short. Bring Hydro Unit 1 online and ramp the gas
+      plant to full capacity before the grid becomes unstable.
+
+  - id: task_medium
+    name: "Line Fault Recovery"
+    difficulty: medium
+    max_steps: 10
+    description: >
+      A transmission line has faulted, leaving City South blacked out.
+      Acknowledge alerts, shed load from Industrial to free headroom,
+      reroute power via Line 3, and dispatch a repair crew.
+
+  - id: task_hard
+    name: "Cascading Failure"
+    difficulty: hard
+    max_steps: 15
+    description: >
+      Northfield Nuclear (500 MW) has tripped during peak hour.
+      Two lines are already overloaded. A severe storm makes wind output
+      unpredictable. Budget is critically tight. Protect the hospital zone
+      at all costs and prevent a full cascade.
+
+action_space:
+  - dispatch_generator
+  - shed_load
+  - reroute_line
+  - request_emergency_reserve
+  - send_field_crew
+  - acknowledge_alert
+  - issue_public_notice
+  - no_op
+
+observation_space:
+  - generators
+  - transmission_lines
+  - load_zones
+  - alerts
+  - weather
+  - budget
+  - step
+  - hour
+
+reward_range:
+  - 0.0
+  - 1.0
+
+reward_components:
+  mw_served_ratio:
+    weight: 0.40
+    description: "Ratio of total MW served to total MW demanded across all zones"
+  blackout_score:
+    weight: 0.30
+    description: "Penalty for blacked-out zones, weighted by zone priority"
+  budget_efficiency:
+    weight: 0.20
+    description: "Penalises excessive budget spend in a single step"
+  alert_response:
+    weight: 0.10
+    description: "Rewards timely acknowledgement of active alerts"
+
+zone_priorities:
+  - critical  # hospitals, emergency services — maximum penalty if blacked out
+  - high      # residential city centres
+  - medium    # industrial / commercial
+  - low       # suburban / non-essential
+
+generator_fuel_types:
+  - nuclear
+  - gas
+  - hydro
+  - wind
+  - solar
+
+termination_conditions:
+  - "max_steps reached"
+  - "budget_remaining <= 0"
+  - "all critical-priority zones blacked out simultaneously"
