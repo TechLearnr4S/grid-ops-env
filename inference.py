@@ -15,9 +15,14 @@ from graders import grade
 # Configuration
 # ---------------------------------------------------------------------------
 
-API_BASE_URL = os.getenv("API_BASE_URL") or "https://router.huggingface.co/v1"
-API_KEY = os.getenv("HF_TOKEN") or os.getenv("OPENAI_API_KEY")
-MODEL_NAME = os.getenv("MODEL_NAME")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
+HF_TOKEN = os.getenv("HF_TOKEN")
+
+if HF_TOKEN is None:
+    raise ValueError("HF_TOKEN environment variable is required")
+
+API_KEY = HF_TOKEN
 TEMPERATURE = 0.2
 MAX_TOKENS = 512
 MAX_STEPS = 20
@@ -162,16 +167,17 @@ def run_episode(task_id: str, client: OpenAI) -> dict:
     env = GridOpsEnv(task_id)
     history: List[str] = []
     history_dicts: List[dict] = []
+    step_rewards: List[str] = []
     reward = 0.0
+
+    print(f"[START] task={task_id} env=grid-ops-env model={MODEL_NAME}")
 
     try:
         result = env.reset()
         observation = result.observation
-        print(f"Episode goal: {observation.goal}")
 
         for step in range(1, MAX_STEPS + 1):
             if result.done:
-                print("Environment signalled done. Stopping early.")
                 break
 
             user_prompt = build_user_prompt(step, observation, history)
@@ -190,12 +196,9 @@ def run_episode(task_id: str, client: OpenAI) -> dict:
                 )
                 response_text = completion.choices[0].message.content or ""
             except Exception as exc:
-                print(f"Model request failed ({exc}). Using fallback action.")
                 response_text = ""
 
             action = parse_model_action(response_text)
-            print(f"Step {step}: model suggested -> {action.action_type}")
-
             result = env.step(action)
             observation = result.observation
 
@@ -204,19 +207,30 @@ def run_episode(task_id: str, client: OpenAI) -> dict:
             history.append(history_line)
             history_dicts.append(action.model_dump())
 
-            print(f"  Reward: {reward:+.2f} | Done: {result.done}")
+            reward_str = f"{reward:.2f}"
+            step_rewards.append(reward_str)
+            done_str = "true" if result.done else "false"
+            action_str = json.dumps(action.model_dump(), separators=(',', ':'))
+            error_str = "null"
+            if hasattr(result, "info") and result.info.get("error"):
+                error_str = str(result.info["error"]).replace("\\n", " ")
+
+            print(f"[STEP] step={step} action={action_str} reward={reward_str} done={done_str} error={error_str}")
 
             if result.done:
-                print("Episode complete.")
                 break
 
         else:
-            print(f"Reached max steps ({MAX_STEPS}).")
+            pass
 
     finally:
         pass
 
     grade_result = grade(task_id, env.state(), history_dicts)
+    success_str = "true" if grade_result["score"] > 0.0 else "false"
+    
+    print(f"[END] success={success_str} steps={len(history)} rewards={','.join(step_rewards)}")
+
     return {
         "task_id": task_id,
         "steps_taken": len(history),
@@ -234,31 +248,13 @@ def run_episode(task_id: str, client: OpenAI) -> dict:
 def main() -> None:
     client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
     results = {}
-    total_start = time.time()
 
     for task_id in ["task_easy", "task_medium", "task_hard"]:
-        print(f"\n{'=' * 60}")
-        print(f"Running {task_id}...")
-        print(f"{'=' * 60}")
         result = run_episode(task_id, client)
         results[task_id] = result
-        print(f"\n[DONE] {task_id} complete — Grade: {result['grade_result']['score']:.3f}")
-
-    total_time = time.time() - total_start
-    print(f"\n{'=' * 60}")
-    print("FINAL BASELINE SCORES")
-    print(f"{'=' * 60}")
-    for task_id, result in results.items():
-        score = result["grade_result"]["score"]
-        print(f"  {task_id:20s}: {score:.3f}")
-
-    overall = sum(r["grade_result"]["score"] for r in results.values()) / 3
-    print(f"  {'OVERALL':20s}: {overall:.3f}")
-    print(f"\nTotal runtime: {total_time:.1f}s")
 
     with open("baseline_scores.json", "w") as f:
         json.dump(results, f, indent=2)
-    print("Scores saved to baseline_scores.json")
 
 
 if __name__ == "__main__":
