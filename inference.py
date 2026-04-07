@@ -17,10 +17,10 @@ from graders import grade
 
 API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
-HF_TOKEN = os.getenv("HF_TOKEN")
+HF_TOKEN = os.getenv("HF_TOKEN") or os.getenv("OPENAI_API_KEY")
 
 if HF_TOKEN is None:
-    raise ValueError("HF_TOKEN environment variable is required")
+    raise ValueError("HF_TOKEN or OPENAI_API_KEY environment variable is required")
 
 API_KEY = HF_TOKEN
 TEMPERATURE = 0.2
