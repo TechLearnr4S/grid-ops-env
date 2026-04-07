@@ -227,9 +227,10 @@ def run_episode(task_id: str, client: OpenAI) -> dict:
         pass
 
     grade_result = grade(task_id, env.state(), history_dicts)
-    success_str = "true" if grade_result["score"] > 0.0 else "false"
+    score = grade_result["score"]
+    success_str = "true" if score > 0.0 else "false"
     
-    print(f"[END] success={success_str} steps={len(history)} rewards={','.join(step_rewards)}")
+    print(f"[END] success={success_str} steps={len(history)} score={score:.3f} rewards={','.join(step_rewards)}")
 
     return {
         "task_id": task_id,
