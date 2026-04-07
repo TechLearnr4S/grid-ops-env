@@ -1,3 +1,13 @@
+---
+title: Meta Hackathon Grid Ops
+emoji: ⚡
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+tags:
+  - openenv
+---
 # ⚡ GridOpsEnv
 ### Power Grid Emergency Operations — OpenEnv Environment
 

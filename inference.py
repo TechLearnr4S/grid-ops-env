@@ -17,10 +17,10 @@ from graders import grade
 
 API_BASE_URL = os.getenv("API_BASE_URL", "https://api.openai.com/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-4o-mini")
-HF_TOKEN = os.getenv("HF_TOKEN")
+HF_TOKEN = os.getenv("HF_TOKEN") or os.getenv("OPENAI_API_KEY")
 
 if HF_TOKEN is None:
-    raise ValueError("HF_TOKEN environment variable is required")
+    raise ValueError("HF_TOKEN or OPENAI_API_KEY environment variable is required")
 
 API_KEY = HF_TOKEN
 TEMPERATURE = 0.2
@@ -227,9 +227,10 @@ def run_episode(task_id: str, client: OpenAI) -> dict:
         pass
 
     grade_result = grade(task_id, env.state(), history_dicts)
-    success_str = "true" if grade_result["score"] > 0.0 else "false"
+    score = grade_result["score"]
+    success_str = "true" if score > 0.0 else "false"
     
-    print(f"[END] success={success_str} steps={len(history)} rewards={','.join(step_rewards)}")
+    print(f"[END] success={success_str} steps={len(history)} score={score:.3f} rewards={','.join(step_rewards)}")
 
     return {
         "task_id": task_id,
