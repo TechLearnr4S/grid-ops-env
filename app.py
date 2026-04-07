@@ -138,6 +138,14 @@ async def startup_event() -> None:
 # ---------------------------------------------------------------------------
 
 
+@app.get("/", summary="Root ping endpoint")
+async def root() -> JSONResponse:
+    """Return 200 OK for automated ping."""
+    return JSONResponse(
+        content={"status": "ok", "message": "GridOpsEnv is running, please use /health"}
+    )
+
+
 @app.post("/reset", summary="Start a new episode")
 async def reset(body: ResetRequest) -> JSONResponse:
     """
