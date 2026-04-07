@@ -1,0 +1,87 @@
+{
+  "task_easy": {
+    "task_id": "task_easy",
+    "steps_taken": 6,
+    "final_reward": 0.9,
+    "grade_result": {
+      "score": 0.55,
+      "breakdown": {
+        "supply_restored": 0.35,
+        "correct_dispatch": 0.0,
+        "alert_acknowledged": 0.15,
+        "efficiency": 0.05,
+        "no_unnecessary_actions": 0.0
+      },
+      "reason": "Supply restored: 100.0% of demand met (\u226595% target). | No correct dispatch actions found (0/0.25). | No alerts present \u2014 full alert score. | Efficiency: solved in 6 steps \u2014 0.05/0.15. | Found 5 repeated action(s) \u2014 0/0.10 unnecessary action penalty."
+    },
+    "history": [
+      "Step 1: ActionType.no_op -> reward +0.78",
+      "Step 2: ActionType.no_op -> reward +0.79",
+      "Step 3: ActionType.no_op -> reward +0.82",
+      "Step 4: ActionType.no_op -> reward +0.84",
+      "Step 5: ActionType.no_op -> reward +0.88",
+      "Step 6: ActionType.no_op -> reward +0.90"
+    ]
+  },
+  "task_medium": {
+    "task_id": "task_medium",
+    "steps_taken": 10,
+    "final_reward": 0.6733,
+    "grade_result": {
+      "score": 0.35,
+      "breakdown": {
+        "city_south_restored": 0.15,
+        "line2_repair_initiated": 0.0,
+        "no_line3_overload": 0.2,
+        "alert_handling": 0.0,
+        "load_shed_correct": 0.0
+      },
+      "reason": "City South zone not found in final state (neutral 0.15). | No field crew sent to line-2 (0/0.20). | Line 3 never exceeded rated capacity \u2014 cascade avoided. | Critical alert never acknowledged (0/0.15). | No shed_load actions used (0/0.15)."
+    },
+    "history": [
+      "Step 1: ActionType.no_op -> reward +0.67",
+      "Step 2: ActionType.no_op -> reward +0.66",
+      "Step 3: ActionType.no_op -> reward +0.67",
+      "Step 4: ActionType.no_op -> reward +0.67",
+      "Step 5: ActionType.no_op -> reward +0.67",
+      "Step 6: ActionType.no_op -> reward +0.67",
+      "Step 7: ActionType.no_op -> reward +0.67",
+      "Step 8: ActionType.no_op -> reward +0.67",
+      "Step 9: ActionType.no_op -> reward +0.67",
+      "Step 10: ActionType.no_op -> reward +0.67"
+    ]
+  },
+  "task_hard": {
+    "task_id": "task_hard",
+    "steps_taken": 15,
+    "final_reward": 0.4386,
+    "grade_result": {
+      "score": 0.65,
+      "breakdown": {
+        "hospital_protected": 0.3,
+        "cascade_prevented": 0.0,
+        "budget_managed": 0.2,
+        "nuclear_compensated": 0.15,
+        "communication": 0.0
+      },
+      "reason": "Hospital District never lost power \u2014 full protection score. | Both Lines 1 and 2 faulted: {'line-1': [1, 2, 3], 'line-2': [1, 2, 3]} (0/0.20). | Budget managed: $3000 remaining (score 0.200/0.20). | Nuclear compensated by step 8: generation 580 MW vs demand 571 MW (101.5% \u2014 within \u00b110%). | No public notice issued and critical alerts unacknowledged (0/0.15)."
+    },
+    "history": [
+      "Step 1: ActionType.no_op -> reward +0.47",
+      "Step 2: ActionType.no_op -> reward +0.47",
+      "Step 3: ActionType.no_op -> reward +0.48",
+      "Step 4: ActionType.no_op -> reward +0.48",
+      "Step 5: ActionType.no_op -> reward +0.48",
+      "Step 6: ActionType.no_op -> reward +0.48",
+      "Step 7: ActionType.no_op -> reward +0.48",
+      "Step 8: ActionType.no_op -> reward +0.48",
+      "Step 9: ActionType.no_op -> reward +0.48",
+      "Step 10: ActionType.no_op -> reward +0.48",
+      "Step 11: ActionType.no_op -> reward +0.47",
+      "Step 12: ActionType.no_op -> reward +0.46",
+      "Step 13: ActionType.no_op -> reward +0.45",
+      "Step 14: ActionType.no_op -> reward +0.45",
+      "Step 15: ActionType.no_op -> reward +0.44"
+    ]
+  }
+}
