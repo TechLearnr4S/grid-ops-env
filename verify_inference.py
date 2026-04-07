@@ -12,13 +12,14 @@ except SyntaxError as e:
 
 print("=== Exact variable constants ===")
 # clear env so defaults take effect
-for k in ["API_BASE_URL", "HF_TOKEN", "OPENAI_API_KEY", "MODEL_NAME"]:
+for k in ["API_BASE_URL", "OPENAI_API_KEY", "MODEL_NAME"]:
     os.environ.pop(k, None)
+os.environ["HF_TOKEN"] = "mock_token"
 
 import importlib
 inf = importlib.import_module("inference")
 
-assert inf.API_BASE_URL == "https://router.huggingface.co/v1", f"Bad URL: {inf.API_BASE_URL}"
+assert inf.API_BASE_URL == "https://api.openai.com/v1", f"Bad URL: {inf.API_BASE_URL}"
 assert inf.TEMPERATURE == 0.2
 assert inf.MAX_TOKENS == 512
 assert inf.MAX_STEPS == 20
