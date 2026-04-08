@@ -147,12 +147,15 @@ async def root() -> JSONResponse:
 
 
 @app.post("/reset", summary="Start a new episode")
-async def reset(body: ResetRequest) -> JSONResponse:
+async def reset(body: Optional[ResetRequest] = None) -> JSONResponse:
     """
     Create a new GridOpsEnv session for the requested task and reset it.
 
     Returns StepResult JSON + session_id.
     """
+    if body is None:
+        body = ResetRequest(task_id="task_easy")
+        
     try:
         env = GridOpsEnv(body.task_id)
     except ValueError as exc:

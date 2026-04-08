@@ -64,7 +64,7 @@
         "nuclear_compensated": 0.15,
         "communication": 0.0
       },
-      "reason": "Hospital District never lost power \u2014 full protection score. | Both Lines 1 and 2 faulted: {'line-1': [1, 2, 3], 'line-2': [1, 2, 3]} (0/0.20). | Budget managed: $3000 remaining (score 0.200/0.20). | Nuclear compensated by step 8: generation 580 MW vs demand 571 MW (101.5% \u2014 within \u00b110%). | No public notice issued and critical alerts unacknowledged (0/0.15)."
+      "reason": "Hospital District never lost power \u2014 full protection score. | Both Lines 1 and 2 faulted: {'line-2': [1, 2, 3], 'line-1': [1, 2, 3]} (0/0.20). | Budget managed: $3000 remaining (score 0.200/0.20). | Nuclear compensated by step 8: generation 580 MW vs demand 571 MW (101.5% \u2014 within \u00b110%). | No public notice issued and critical alerts unacknowledged (0/0.15)."
     },
     "history": [
       "Step 1: ActionType.no_op -> reward +0.47",
