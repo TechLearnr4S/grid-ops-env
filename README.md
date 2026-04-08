@@ -246,10 +246,11 @@ Each step the agent receives a full `GridState` observation:
 The step reward is a weighted sum of four components, scored 0.0–1.0:
 
 ```
-R(s, a, s') = 0.40 × MW_served_ratio
+R(s, a, s') = 0.35 × MW_served_ratio
             + 0.30 × blackout_score
-            + 0.20 × budget_efficiency
-            + 0.10 × alert_response
+            + 0.15 × sustainability
+            + 0.15 × budget_efficiency
+            + 0.05 × alert_response
 ```
 
 ### Multi-Objective Optimization: Reliability vs. Sustainability
@@ -481,6 +482,9 @@ grid-ops-env/
 │   ├── models.py            # Pydantic v2 domain models (Generator, LoadZone, Action, ...)
 │   ├── grid_simulator.py    # Stateless physics engine — apply_action, tick, calculate_reward
 │   └── grid_env.py          # GridOpsEnv — main environment class (reset / step / state)
+├── server/
+│   ├── __init__.py          # Python package marker
+│   └── app.py               # FastAPI server — 6 endpoints (reset/step/state/tasks/grade/health)
 ├── graders/
 │   ├── __init__.py          # Grader registry + grade() dispatcher
 │   ├── grade_easy.py        # Deterministic grader for task_easy (5 criteria)
@@ -491,11 +495,12 @@ grid-ops-env/
 │   └── task_definitions.py  # TASK_EASY, TASK_MEDIUM, TASK_HARD GridState configs
 ├── tests/
 │   └── test_models.py       # 50 pytest tests for all Pydantic models
-├── app.py                   # FastAPI server — 6 endpoints (reset/step/state/tasks/grade/health)
 ├── inference.py             # Baseline LLM agent — runs all 3 tasks, grades, saves JSON
 ├── Dockerfile               # Container for HF Spaces (python:3.11-slim, port 7860)
 ├── requirements.txt         # Pinned Python dependencies
-├── openenv.yaml             # OpenEnv manifest (tasks, action/observation spaces, reward range)
+├── pyproject.toml           # Modern PEP 621 project configuration
+├── uv.lock                  # Pinned dependency lockfile for UV
+├── openenv.yaml             # OpenEnv manifest (tasks, action/observation spaces)
 ├── .env.example             # Environment variable template
 └── README.md                # This file
 ```
