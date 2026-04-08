@@ -64,16 +64,19 @@ reward_range:
 
 reward_components:
   mw_served_ratio:
-    weight: 0.40
-    description: "Ratio of total MW served to total MW demanded across all zones"
+    weight: 0.35
+    description: "Ratio of total MW served to total MW demanded"
   blackout_score:
     weight: 0.30
-    description: "Penalty for blacked-out zones, weighted by zone priority"
+    description: "Penalty for blacked-out zones, weighted by priority"
+  sustainability:
+    weight: 0.15
+    description: "Rewards low carbon intensity (preferring green energy)"
   budget_efficiency:
-    weight: 0.20
-    description: "Penalises excessive budget spend in a single step"
+    weight: 0.15
+    description: "Penalises excessive budget spend in a step"
   alert_response:
-    weight: 0.10
+    weight: 0.05
     description: "Rewards timely acknowledgement of active alerts"
 
 zone_priorities:

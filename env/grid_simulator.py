@@ -229,10 +229,11 @@ class GridSimulator:
         Compute composite reward for a single step transition.
 
         Component weights:
-          0.40 — MW served ratio (how well demand is met)
+          0.35 — MW served ratio (how well demand is met)
           0.30 — Blackout penalty weighted by zone priority
-          0.20 — Budget efficiency (penalise large budget spend)
-          0.10 — Alert response (reward prompt acknowledgement)
+          0.15 — Sustainability (reward low carbon intensity)
+          0.15 — Budget efficiency (reward frugality)
+          0.05 — Alert response (reward prompt acknowledgement)
         """
         breakdown: Dict[str, float] = {}
 
@@ -242,7 +243,7 @@ class GridSimulator:
         else:
             served_ratio = 1.0
         served_ratio = max(0.0, min(1.0, served_ratio))
-        breakdown["mw_served_ratio"] = round(served_ratio * 0.40, 4)
+        breakdown["mw_served_ratio"] = round(served_ratio * 0.35, 4)
 
         # -- 2. Blackout penalty by zone priority (0.0 – 1.0 inverted) --
         total_priority_weight = sum(
@@ -259,7 +260,19 @@ class GridSimulator:
         blackout_score = max(0.0, min(1.0, blackout_score))
         breakdown["blackout_score"] = round(blackout_score * 0.30, 4)
 
-        # -- 3. Budget efficiency (reward frugality) --
+        # -- 3. Sustainability Score (Carbon Intensity) --
+        total_co2 = sum(g.current_mw * g.co2_per_mw for g in state.generators)
+        if state.total_mw_served > 0:
+            intensity = total_co2 / state.total_mw_served
+        else:
+            intensity = 0.0
+        
+        # intensity of ~450 is standard gas. 0 is fully green. 
+        # sustainability_score of 1.0 at 0 intensity, 0.5 at 500 intensity.
+        sustainability_score = max(0.0, 1.0 - (intensity / 1000.0))
+        breakdown["sustainability"] = round(sustainability_score * 0.15, 4)
+
+        # -- 4. Budget efficiency (reward frugality) --
         budget_spent = max(0.0, prev_state.budget_remaining - state.budget_remaining)
         if prev_state.budget_remaining > 0:
             budget_use_fraction = budget_spent / prev_state.budget_remaining
@@ -267,16 +280,16 @@ class GridSimulator:
             budget_use_fraction = 1.0
         # Reward staying under budget — penalise heavy spend in a single step
         budget_score = max(0.0, 1.0 - budget_use_fraction * 5.0)
-        breakdown["budget_efficiency"] = round(budget_score * 0.20, 4)
+        breakdown["budget_efficiency"] = round(budget_score * 0.15, 4)
 
-        # -- 4. Alert response quality --
+        # -- 5. Alert response quality --
         total_alerts = len(state.alerts)
         if total_alerts == 0:
             alert_score = 1.0
         else:
             ack_count = sum(1 for a in state.alerts if a.acknowledged)
             alert_score = ack_count / total_alerts
-        breakdown["alert_response"] = round(alert_score * 0.10, 4)
+        breakdown["alert_response"] = round(alert_score * 0.05, 4)
 
         # -- Composite score --
         raw_score = sum(breakdown.values())
@@ -284,10 +297,10 @@ class GridSimulator:
 
         # Build human-readable reason
         reason_parts = [
-            f"MW served: {served_ratio * 100:.1f}% of demand",
-            f"blackout score: {blackout_score:.2f}",
-            f"budget spent this step: ${budget_spent:.0f}",
-            f"alerts acknowledged: {sum(1 for a in state.alerts if a.acknowledged)}/{total_alerts}",
+            f"MW served: {served_ratio * 100:.1f}%",
+            f"carbon intensity: {intensity:.0f} kg/MW",
+            f"budget spent: ${budget_spent:.0f}",
+            f"alerts acked: {sum(1 for a in state.alerts if a.acknowledged)}/{total_alerts}",
         ]
         reason = " | ".join(reason_parts)
 

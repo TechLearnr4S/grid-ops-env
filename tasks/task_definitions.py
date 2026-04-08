@@ -54,6 +54,7 @@ TASK_EASY: Dict[str, Any] = {
                 max_mw=500.0,
                 min_mw=300.0,
                 cost_per_mw=2.5,
+                co2_per_mw=0.0,
                 fuel_type=FuelType.nuclear,
             ),
             Generator(
@@ -64,6 +65,7 @@ TASK_EASY: Dict[str, Any] = {
                 max_mw=300.0,
                 min_mw=50.0,
                 cost_per_mw=8.0,
+                co2_per_mw=450.0,
                 fuel_type=FuelType.gas,
             ),
             Generator(
@@ -74,6 +76,7 @@ TASK_EASY: Dict[str, Any] = {
                 max_mw=200.0,
                 min_mw=20.0,
                 cost_per_mw=4.0,
+                co2_per_mw=0.0,
                 fuel_type=FuelType.hydro,
             ),
         ],
@@ -172,6 +175,7 @@ TASK_MEDIUM: Dict[str, Any] = {
                 max_mw=500.0,
                 min_mw=300.0,
                 cost_per_mw=2.5,
+                co2_per_mw=0.0,
                 fuel_type=FuelType.nuclear,
             ),
             Generator(
@@ -182,6 +186,7 @@ TASK_MEDIUM: Dict[str, Any] = {
                 max_mw=300.0,
                 min_mw=50.0,
                 cost_per_mw=8.0,
+                co2_per_mw=450.0,
                 fuel_type=FuelType.gas,
             ),
             Generator(
@@ -192,6 +197,7 @@ TASK_MEDIUM: Dict[str, Any] = {
                 max_mw=200.0,
                 min_mw=20.0,
                 cost_per_mw=4.0,
+                co2_per_mw=0.0,
                 fuel_type=FuelType.hydro,
             ),
         ],
@@ -314,6 +320,7 @@ TASK_HARD: Dict[str, Any] = {
                 max_mw=500.0,
                 min_mw=300.0,
                 cost_per_mw=2.5,
+                co2_per_mw=0.0,
                 fuel_type=FuelType.nuclear,
             ),
             Generator(
@@ -324,6 +331,7 @@ TASK_HARD: Dict[str, Any] = {
                 max_mw=300.0,
                 min_mw=50.0,
                 cost_per_mw=8.0,
+                co2_per_mw=450.0,
                 fuel_type=FuelType.gas,
             ),
             Generator(
@@ -334,6 +342,7 @@ TASK_HARD: Dict[str, Any] = {
                 max_mw=200.0,
                 min_mw=30.0,
                 cost_per_mw=9.5,
+                co2_per_mw=550.0,
                 fuel_type=FuelType.gas,
             ),
             Generator(
@@ -344,6 +353,7 @@ TASK_HARD: Dict[str, Any] = {
                 max_mw=150.0,
                 min_mw=0.0,
                 cost_per_mw=1.0,
+                co2_per_mw=0.0,
                 fuel_type=FuelType.wind,
             ),
         ],

@@ -1,0 +1,24 @@
+Using CPython 3.13.5 interpreter at: C:\Users\DELL\AppData\Local\Programs\Python\Python313\python.exe
+  × No solution found when resolving dependencies for split (markers:
+  │ python_full_version == '3.9.*'):
+  ╰─▶ Because the requested Python version (>=3.9) does not satisfy
+      Python>=3.10 and openenv-core>=0.2.0 depends on Python>=3.10, we can
+      conclude that openenv-core>=0.2.0 cannot be used.
+      And because only the following versions of openenv-core are available:
+          openenv-core<=0.2.0
+          openenv-core==0.2.1
+          openenv-core==0.2.2
+          openenv-core==0.2.3
+      we can conclude that openenv-core>=0.2.0 cannot be used.
+      And because your project depends on openenv-core>=0.2.0 and your
+      project requires grid-ops-env[dev], we can conclude that your project's
+      requirements are unsatisfiable.
+
+      hint: While the active Python version is 3.13, the resolution failed for
+      other Python versions supported by your project. Consider limiting your
+      project's supported Python versions using `requires-python`.
+
+      hint: The `requires-python` value (>=3.9) includes Python versions that
+      are not supported by your dependencies (e.g., openenv-core>=0.2.0 only
+      supports >=3.10). Consider using a more restrictive `requires-python`
+      value (like >=3.10).

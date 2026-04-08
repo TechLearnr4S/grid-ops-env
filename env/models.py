@@ -80,6 +80,7 @@ class Generator(BaseModel):
     max_mw: float = Field(..., gt=0.0, description="Maximum rated power output in MW")
     min_mw: float = Field(0.0, ge=0.0, description="Minimum stable generation in MW (0 = can be shut down)")
     cost_per_mw: float = Field(..., ge=0.0, description="Operating cost per MW per step")
+    co2_per_mw: float = Field(0.0, ge=0.0, description="CO2 emission intensity (kg/MW/step)")
     fuel_type: FuelType = Field(..., description="Fuel or energy source type")
 
     @field_validator("current_mw")

@@ -252,12 +252,20 @@ R(s, a, s') = 0.40 × MW_served_ratio
             + 0.10 × alert_response
 ```
 
+### Multi-Objective Optimization: Reliability vs. Sustainability
+
+GridOpsEnv (developed by **Team ImpactX**) introduces a novel reward mechanism that forces agents to balance three competing objectives:
+1.  **Reliability (65%)**: Preventing blackouts and meeting load demand. 
+2.  **Sustainability (15%)**: Minimizing the carbon footprint (kg CO2 per MW served) by prioritizing carbon-neutral sources like wind and nuclear.
+3.  **Efficiency (20%)**: Managing a limited operational budget and responding to critical alerts promptly.
+
 | Component | Weight | Formula | Description |
 |---|---|---|---|
-| `mw_served_ratio` | 0.40 | `total_mw_served / total_mw_demanded` | Fraction of total demand being met |
-| `blackout_score` | 0.30 | `1 - (Σ priority_weight[z] for blacked-out z) / Σ priority_weight[z]` | Penalises blackouts weighted by zone priority |
-| `budget_efficiency` | 0.20 | `max(0, 1 - budget_fraction_spent × 5)` | Rewards frugal steps; penalises large single-step spend |
-| `alert_response` | 0.10 | `acked_alerts / total_alerts` | Fraction of active alerts acknowledged |
+| `mw_served_ratio` | 0.35 | `total_mw_served / total_mw_demanded` | Fraction of total demand being met |
+| `blackout_score` | 0.30 | `1.0 - (penalty / total_weight)` | Priority-weighted blackout check |
+| `sustainability` | 0.15 | `1.0 - (intensity / 1000)` | Reward for carbon-neutral energy |
+| `budget_efficiency` | 0.15 | `1.0 - (spend / budget) * 5` | Penalises capital depletion |
+| `alert_response` | 0.05 | `acked / total_alerts` | Timely alert acknowledgement |
 
 **Priority weights used in `blackout_score`:**
 | Priority | Weight |
